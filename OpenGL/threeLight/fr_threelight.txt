@@ -1,0 +1,69 @@
+#version 460 core
+out vec4 FragColor;
+
+in vec3 Normal;  
+in vec3 FragPos;  
+  
+uniform vec3 lightPos; 
+uniform vec3 lightPos2; 
+uniform vec3 lightPos3; 
+
+uniform vec3 viewPos; 
+
+uniform vec3 lightColor;
+uniform vec3 lightColor2;
+uniform vec3 lightColor3;
+
+uniform vec3 objectColor;
+
+void main()
+{   
+    //lightPos
+    // ambient
+    float ambientStrength = 0.3;
+    vec3 ambient = ambientStrength * lightColor;
+  	
+    // diffuse 
+    vec3 norm = normalize(Normal);
+    vec3 lightDir = normalize(lightPos - FragPos);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * lightColor;
+    
+    // specular
+    float specularStrength = 0.5;
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    vec3 specular = specularStrength * spec * lightColor;  
+        
+    //lightPos2
+    // ambient
+    vec3 ambient2 = ambientStrength * lightColor2;
+  	
+    // diffuse 
+    vec3 lightDir2 = normalize(lightPos2 - FragPos);
+    diff = max(dot(norm, lightDir2), 0.0);
+    vec3 diffuse2 = diff * lightColor2;
+    
+    // specular
+    vec3 reflectDir2 = reflect(-lightDir2, norm);  
+    spec = pow(max(dot(viewDir, reflectDir2), 0.0), 32);
+    vec3 specular2 = specularStrength * spec * lightColor2;  
+
+    //lightPos3
+    // ambient
+    vec3 ambient3 = ambientStrength * lightColor3;
+  	
+    // diffuse 
+    vec3 lightDir3 = normalize(lightPos3 - FragPos);
+    diff = max(dot(norm, lightDir3), 0.0);
+    vec3 diffuse3 = diff * lightColor3;
+    
+    // specular
+    vec3 reflectDir3 = reflect(-lightDir3, norm);  
+    spec = pow(max(dot(viewDir, reflectDir3), 0.0), 32);
+    vec3 specular3 = specularStrength * spec * lightColor3;  
+
+    vec3 result = (ambient + diffuse + specular) * objectColor + (ambient2 + diffuse2 + specular2) * objectColor + (ambient3 + diffuse3 + specular3) * objectColor;
+    FragColor = vec4(result, 1.0);
+} 

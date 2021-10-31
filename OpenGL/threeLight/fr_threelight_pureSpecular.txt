@@ -1,0 +1,48 @@
+#version 460 core
+out vec4 FragColor;
+
+in vec3 Normal;  
+in vec3 FragPos;  
+  
+uniform vec3 lightPos; 
+uniform vec3 lightPos2; 
+uniform vec3 lightPos3; 
+
+uniform vec3 viewPos; 
+
+uniform vec3 lightColor;
+uniform vec3 lightColor2;
+uniform vec3 lightColor3;
+
+uniform vec3 objectColor;
+
+void main()
+{   
+    //lightPos
+    vec3 norm = normalize(Normal);
+    vec3 lightDir = normalize(lightPos - FragPos);
+    // specular
+    float specularStrength = 0.5;
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    vec3 specular = specularStrength * spec * lightColor;  
+        
+
+    //lightPos2
+    vec3 lightDir2 = normalize(lightPos2 - FragPos);
+    // specular
+    vec3 reflectDir2 = reflect(-lightDir2, norm);  
+    spec = pow(max(dot(viewDir, reflectDir2), 0.0), 32);
+    vec3 specular2 = specularStrength * spec * lightColor2;  
+
+    //lightPos3
+    vec3 lightDir3 = normalize(lightPos3 - FragPos); 
+    // specular
+    vec3 reflectDir3 = reflect(-lightDir3, norm);  
+    spec = pow(max(dot(viewDir, reflectDir3), 0.0), 32);
+    vec3 specular3 = specularStrength * spec * lightColor3;  
+
+    vec3 result = specular * objectColor + specular2 * objectColor + specular3 * objectColor;
+    FragColor = vec4(result, 1.0);
+} 
